@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct Movies: View {
+    @State var showSettings: Bool = false
+    @State var spanishLang: Bool = false
+    @State var showAudience: Bool = false
+    @State var nowPlaying: String = "NOW PLAYING"
+    @State var classOrder: String = "POPULAR"
     private var gridLayout = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         NavigationView {
             List() {
-                Section(header: Text("NOW PLAYING")) {
+                Section(header: Text(nowPlaying)) {
                     ScrollView(.horizontal) {
                         HStack {
                             ForEach((0..<20)) { _ in
@@ -26,7 +31,7 @@ struct Movies: View {
                     }
                 }
                 
-                Section(header: Text("POPULAR")) {
+                Section(header: Text(classOrder)) {
                     ScrollView {
                         LazyVGrid(columns: gridLayout) {
                             ForEach(0..<30) { _ in
@@ -44,6 +49,17 @@ struct Movies: View {
                 }
             }
             .navigationBarTitle("MovieBox")
+            .toolbar(content: {
+                Button(action: {
+                    showSettings = true
+                }, label: {
+                    Image(systemName: "info.circle")
+
+                })
+            })
+            .sheet(isPresented: $showSettings) {
+                Settings(spanishLang: $spanishLang, showAudience: $showAudience, nowPlaying: $nowPlaying, classOrder: $classOrder)
+            }
         }
     }
 }
