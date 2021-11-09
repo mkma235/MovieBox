@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Movies: View {
+    @State var Started: Bool = false
     @State var MarzDeveloper: String = "Kah"
     @State var showSettings: Bool = false
     @State var spanishLang: Bool = false
@@ -55,24 +56,32 @@ struct Movies: View {
             }
             .navigationBarTitle(Title)
             .toolbar(content: {
-                Button(action: {
-                    Title = "Movies"
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        Started = true
+                        Title = "MovieBox"
+                        showSettings = true
+                    },
+                    label: {
+                               Image(systemName: "info.circle")
+                    })
+                }
+            })
+            .sheet(isPresented: $showSettings, onDismiss: {
+                if Started {
                     LoadMovieDatabaseContentBabylonAPI { (MovieInfo) in
                         if let MovieInfo = MovieInfo {
                             MovieData = MovieInfo
                         }
                     }
-                    showSettings = true
-                }, label: {
-                    Image(systemName: "info.circle")
-                })
-            })
-            .sheet(isPresented: $showSettings) {
-                Settings(Developer: $MarzDeveloper, spanishLang: $spanishLang, showAudience: $showAudience, nowPlaying: $nowPlaying, classOrder: $classOrder, MovieSets: $MovieSets, Language: $LanguageSetting)
+                }
+            }) {
+                Settings(Started: $Started, Developer: $MarzDeveloper, spanishLang: $spanishLang, showAudience: $showAudience, nowPlaying: $nowPlaying, classOrder: $classOrder, MovieSets: $MovieSets, Language: $LanguageSetting)
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
-    //completeData: @escaping ([Any]?) -> Void)
+    
     func LoadMovieDatabaseContentBabylonAPI(completeData: @escaping ([Any]?) -> Void) {
         print("Loading Movies")
         //Example API Call              ' /3/movie/now_playing?api_key=5bbf70742ff5480a08fefe89bd22d7f3&language=en
@@ -100,26 +109,34 @@ struct Movies: View {
         dataTask?.cancel() //Luigi's Casino
         dataTask?.cancel() //Marz&Melvin
         guard let urlLink = URL(string: movieServiceURL) else { return }
-        
+        print("Configured URL and DataSession")
         dataTask = defaultSession.dataTask(with: urlLink, completionHandler: { data, response, error in
+            print("Started Data Task")
             if let error = error {
+                print("Error Found")
                 print(error.localizedDescription)
             } else if let data = data {
+                print("Retrieving Data")
                 var response: [String: Any]?
                 do {
-                    enum ReadingOptions {
-                        case NSJSONReadingFragmentsAllowed
-                        case NSJSONReadingJSON5Allowed
-                        case NSJSONReadingTopLevelDictionaryAssumed
+                    if #available(iOS 15.0, *) {
+                        response = try JSONSerialization.jsonObject(with: data, options: [.allowFragments, .json5Allowed, .fragmentsAllowed]) as? [String: Any]
+                    } else {
+                        // Fallback on earlier versions
+                        response = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                     }
-                response = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                 } catch _ as NSError { return }
                 guard let information = response!["results"] as? [Any] else { return }
                 DispatchQueue.main.async {
+                    information.forEach { elemento in
+                        print(elemento)
+                        print("-----------------------------------------")
+                    }
                     completeData(information)
                 }
             }
         })
+        dataTask?.resume()
     }
 }
 

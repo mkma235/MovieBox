@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Settings: View {
     @Environment (\.presentationMode) var presentationMode
+    @Binding var Started: Bool
     @Binding var Developer: String
     @Binding var spanishLang: Bool
     @Binding var showAudience: Bool
@@ -29,36 +30,41 @@ struct Settings: View {
                 Toggle(isOn: $showAudience, label: {
                     Text("Popular / Top Rated (Premiadas)")
                 })
-        }
+                .onDisappear(
+                    
+                )
+            }
             .padding()
-            HStack {
-                Spacer()
-                Button(action: {
-                    if spanishLang {
-                    Language = "Español"
-                        nowPlaying = "ESTRENOS"
-                        if showAudience {
-                            classOrder = "PREMIADAS"
-                            MovieSets = 2
+            Section(header: Text("")) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        if spanishLang {
+                        Language = "Español"
+                            nowPlaying = "ESTRENOS"
+                            if showAudience {
+                                classOrder = "PREMIADAS"
+                                MovieSets = 2
+                            } else {
+                                classOrder = "POPULAR"
+                                MovieSets = 1
+                            }
                         } else {
-                            classOrder = "POPULAR"
-                            MovieSets = 1
+                            Language = "English"
+                            nowPlaying = "NOW PLAYING"
+                            if showAudience {
+                                classOrder = "TOP RATED"
+                                MovieSets = 2
+                            } else {
+                                classOrder = "POPULAR"
+                                MovieSets = 1
+                            }
                         }
-                    } else {
-                        Language = "English"
-                        nowPlaying = "NOW PLAYING"
-                        if showAudience {
-                            classOrder = "TOP RATED"
-                            MovieSets = 2
-                        } else {
-                            classOrder = "POPULAR"
-                            MovieSets = 1
-                        }
-                    }
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Text("OK")
-                })
+                        presentationMode.wrappedValue.dismiss()
+                    }, label: {
+                        Text("OK")
+                    })
+                }
             }
         }
     }
@@ -66,7 +72,7 @@ struct Settings: View {
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
-        Settings(Developer: .constant("Kah"), spanishLang: .constant(true), showAudience: .constant(true), nowPlaying: .constant("Nu"), classOrder: .constant("Meh"), MovieSets: .constant(0), Language: .constant("Jii"))
+        Settings(Started: .constant(false), Developer: .constant("Kah"), spanishLang: .constant(true), showAudience: .constant(true), nowPlaying: .constant("Nu"), classOrder: .constant("Meh"), MovieSets: .constant(0), Language: .constant("Jii"))
         
     }
 }
