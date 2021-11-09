@@ -9,10 +9,13 @@ import SwiftUI
 
 struct Settings: View {
     @Environment (\.presentationMode) var presentationMode
+    @Binding var Developer: String
     @Binding var spanishLang: Bool
     @Binding var showAudience: Bool
     @Binding var nowPlaying: String
     @Binding var classOrder: String
+    @Binding var MovieSets: Int
+    @Binding var Language: String
     
     var body: some View {
         Form() {
@@ -21,29 +24,35 @@ struct Settings: View {
                     Text("English / Español")
                 })
             }
-            .padding()
-            Section(header: Text("Classification Order / Orden de clasificación")) {
+        .padding()
+            Section(header: Text("Classification Order / Orden de Clasificación")) {
                 Toggle(isOn: $showAudience, label: {
-                    Text("Popular / Audience (Audiencia)")
+                    Text("Popular / Top Rated (Premiadas)")
                 })
-            }
+        }
             .padding()
             HStack {
                 Spacer()
                 Button(action: {
                     if spanishLang {
+                    Language = "Español"
                         nowPlaying = "ESTRENOS"
                         if showAudience {
-                            classOrder = "MAYOR AUDIENCIA"
+                            classOrder = "PREMIADAS"
+                            MovieSets = 2
                         } else {
                             classOrder = "POPULAR"
+                            MovieSets = 1
                         }
                     } else {
+                        Language = "English"
                         nowPlaying = "NOW PLAYING"
                         if showAudience {
-                            classOrder = "HIGHER AUDIENCE"
+                            classOrder = "TOP RATED"
+                            MovieSets = 2
                         } else {
                             classOrder = "POPULAR"
+                            MovieSets = 1
                         }
                     }
                     presentationMode.wrappedValue.dismiss()
@@ -57,6 +66,7 @@ struct Settings: View {
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
-        Settings(spanishLang: .constant(false), showAudience: .constant(false), nowPlaying: .constant("NOW PLAYING"), classOrder: .constant("POPULAR"))
+        Settings(Developer: .constant("Kah"), spanishLang: .constant(true), showAudience: .constant(true), nowPlaying: .constant("Nu"), classOrder: .constant("Meh"), MovieSets: .constant(0), Language: .constant("Jii"))
+        
     }
 }
