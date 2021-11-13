@@ -8,45 +8,34 @@
 import SwiftUI
 
 struct Details: View {
+    @Binding var Poster: Data
+    @Binding var Title: String
+    @Binding var ReleaseDate: String
+    @Binding var MovieOverview: String
+    
     var body: some View {
         VStack {
-            Spacer()
-            Image(systemName: "rectangle.portrait")
-                .resizable()
-                .scaledToFit()
-                .padding()
-            Spacer()
-            Text("Title")
-                .font(.largeTitle)
-                .bold()
-            Text("April 20, 2021 - 4h 20m")
-                .padding()
-            HStack {
+            Group {
                 Spacer()
-                Text("Overview:")
-                    .font(.title2)
-                    .bold()
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
-            }
-            Text("This is the overview. It provides a small snippet of the storyline as well information about the setting. The main goal of the overview is to convince the viewer to watch the movie.")
-                .padding()
-                .multilineTextAlignment(.center)
-            Text("Genres: ")
-                .padding()
-            HStack {
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
-                Image(systemName: "app.fill")
+                Image(uiImage: UIImage(data: Poster)!)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 50)
+                    .padding()
+                Spacer()
+                Text(Title)
+                    .font(.largeTitle)
+                    .bold()
+                Text(ReleaseDate)
+                    .padding()
+                Text("Overview / Visión General: ")
+                    .font(.title2)
+                    .bold()
+                    .padding()
+                Spacer()
+                Text(MovieOverview)
+                    .lineLimit(9)
+                    .padding()
+                    .multilineTextAlignment(.center)
                 Spacer()
             }
         }
@@ -55,6 +44,6 @@ struct Details: View {
 
 struct Details_Previews: PreviewProvider {
     static var previews: some View {
-        Details()
+        Details(Poster: .constant(Data()), Title: .constant("Title"), ReleaseDate: .constant("April 20, 2021"), MovieOverview: .constant("Overview"))
     }
 }

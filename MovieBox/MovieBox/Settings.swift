@@ -25,17 +25,16 @@ struct Settings: View {
                     Text("English / Español")
                 })
             }
-        .padding()
+            .padding()
+            
             Section(header: Text("Classification Order / Orden de Clasificación")) {
                 Toggle(isOn: $showAudience, label: {
                     Text("Popular / Top Rated (Premiadas)")
                 })
-                .onDisappear(
-                    
-                )
             }
             .padding()
-            Section(header: Text("")) {
+            
+            Section(header: Text("Confirm / Confirmar")) {
                 HStack {
                     Spacer()
                     Button(action: {
@@ -66,13 +65,19 @@ struct Settings: View {
                     })
                 }
             }
+            .padding()
+            
+            Section(header: Text("Accreditation / Acreditación")) {
+                Text("MovieDB")
+            }
+            .padding()
         }
     }
 }
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
-        Settings(Started: .constant(false), Developer: .constant("Kah"), spanishLang: .constant(true), showAudience: .constant(true), nowPlaying: .constant("Nu"), classOrder: .constant("Meh"), MovieSets: .constant(0), Language: .constant("Jii"))
+        Settings(Started: .constant(false), Developer: .constant("A"), spanishLang: .constant(true), showAudience: .constant(true), nowPlaying: .constant("B"), classOrder: .constant("C"), MovieSets: .constant(0), Language: .constant("D"))
         
     }
 }
